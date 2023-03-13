@@ -1,0 +1,56 @@
+body{
+    font-family: 'Ubuntu', sans-serif;
+}
+
+/* INDEX START */
+.header-box{
+    margin-bottom: 2rem;
+    padding: 10px;
+}
+.title{
+    font-weight: bolder;
+    font-size: 3rem;
+}
+.title-link{
+    text-decoration: none;
+}
+.title-a{
+    color: rgb(37, 220, 0);
+}
+.title-b{
+    color: rgb(0, 145, 255);
+}
+.title-c{
+    color: blue;
+}
+
+.index-box{
+    text-align: center;
+    padding: 5%;
+}
+.logo-img{
+    margin-bottom: 1rem;
+}
+.le-link-btn{
+    padding: 1.5rem;
+    font-size: 1.5rem;
+    /* margin-left: -4rem; */
+}
+/* INDEX END */
+
+/* MAIN START */
+.form-box{
+    padding: 1rem;
+}
+.accordion-custom{
+    margin: auto;
+    max-width: 1000px;
+}
+.btn-box{
+    text-align: center;
+}
+.send-btn{
+    margin: auto;
+    min-width: 300px;
+}
+/* MAIN START */

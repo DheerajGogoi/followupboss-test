@@ -1,0 +1,63 @@
+<%- include('./partials/header'); %>
+
+<body>
+    <div class="header-box">
+        <p class="title">
+            <a href="#" class="title-link"
+                ><span class="title-a">Lead</span><span class="title-b">ngage</span
+                ><span class="title-c">.com</span></a
+            >
+        </p>
+    </div>
+
+    <div class="form-box">
+        <div class="accordion accordion-custom" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                <button
+                    class="accordion-button"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                >
+                    <span class="title-a">Lead</span><span class="title-b">ngage</span
+                    ><span class="title-c">.com</span>
+                </button>
+                </h2>
+                <div
+                    id="collapseOne"
+                    class="accordion-collapse collapse show"
+                    aria-labelledby="headingOne"
+                    data-bs-parent="#accordionExample"
+                >
+                <div class="accordion-body">
+                    <form action="">
+                        <div class="mb-3">
+                            <label for="select-channel" class="form-label">Channel</label>
+                            <select class="form-select" aria-label="Default select example" id="select-channel" name="channel">
+                                <option selected>SMS</option>
+                                <option value="FB">FB</option>
+                                <option value="GMB">GMB</option>
+                                <option value="Instagram">Instagram</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <textarea class="form-control" id="msg-text" rows="3" placeholder="Enter text" name="text"></textarea>
+                        </div>
+
+                        <div class="btn-box">
+                            <button type="submit" class="btn btn-success send-btn">Send <i class="fa-solid fa-paper-plane-top"></i></button>
+                        </div>
+
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<%- include('./partials/footer'); %>
