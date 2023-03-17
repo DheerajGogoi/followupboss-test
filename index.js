@@ -18,7 +18,7 @@ app.listen(process.env.PORT || 3000, function () {
 });
 
 app.get('/', (req, res) => {
-    res.redirect('/path/index')
+    res.redirect('/path/index');
 });
 
 // END POINTS
