@@ -1,6 +1,7 @@
 <%- include('./partials/header'); %>
 
 <body>
+    
     <div class="header-box">
         <p class="title">
             <a href="#" class="title-link"
@@ -32,23 +33,53 @@
                     data-bs-parent="#accordionExample"
                 >
                 <div class="accordion-body">
-                    <form action="">
+                    <form action="/path/main" method="POST">
                         <div class="mb-3">
                             <label for="select-channel" class="form-label">Channel</label>
-                            <select class="form-select" aria-label="Default select example" id="select-channel" name="channel">
-                                <option selected>SMS</option>
-                                <option value="FB">FB</option>
-                                <option value="GMB">GMB</option>
-                                <option value="Instagram">Instagram</option>
+                            <select class="form-select" aria-label="Default select example" id="select-channel" name="channel"  onchange="onChange_select(channel)" required>
+                                <option value="SMS"
+                                <% if(channel === "sms"){%>
+                                    selected
+                                <%}%>
+                                >SMS</option>
+                                <option value="FB"
+                                <% if(channel === "fb"){%>
+                                    selected
+                                <%}%>
+                                >FB</option>
+                                <option value="GMB"
+                                <% if(channel === "gmb"){%>
+                                    selected
+                                <%}%>
+                                >GMB</option>
+                                <option value="Instagram"
+                                <% if(channel === "instagram"){%>
+                                    selected
+                                <%}%>
+                                >Instagram</option>
                             </select>
                         </div>
 
                         <div class="mb-3">
-                            <textarea class="form-control" id="msg-text" rows="3" placeholder="Enter text" name="text"></textarea>
+                            <textarea class="form-control" id="msg-text" rows="3" placeholder="Enter text" name="note" required></textarea>
                         </div>
 
-                        <div class="btn-box">
-                            <button type="submit" class="btn btn-success send-btn">Send <i class="fa-solid fa-paper-plane-top"></i></button>
+                        <div class="form-footer">
+                            <div class="input-group mb-3 btn-box">
+                                <button type="submit" class="btn btn-success">Send</button>
+                                <%if(channel === "sms"){%>
+                                <span class="input-group-text" id="basic-addon1">
+                                    <select class="form-select" aria-label="Default select example" name="schedule" required>
+                                        <option value="[2hr]" selected>[2hr]</option>
+                                        <option value="[2weeks]">[2weeks]</option>
+                                        <option value="[30days]">[30days]</option>
+                                        <option value="[60days]">[60days]</option>
+                                        <option value="[90days]">[90days]</option>
+                                        <option value="[delete]">[delete]</option>
+                                    </select>
+                                </span>
+                                <%}%>
+                            </div>
                         </div>
 
                     </form>
@@ -57,6 +88,7 @@
             </div>
         </div>
     </div>
+    
 </body>
 
 <%- include('./partials/footer'); %>

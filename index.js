@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.static('public'));
 
-app.listen(process.env.PORT || 3000, function () {
+app.listen(process.env.PORT, function () {
     console.log(`Server started at ${process.env.PORT}`);
 });
 

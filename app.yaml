@@ -1,0 +1,11 @@
+runtime: nodejs16
+env: standard
+env_variables:
+  # PORT: 5000
+  TENANT_ID: "247360145"
+  GHL_CLIENT_ID: "62fe9a0551135c8a31641f37-l8t7bgzk"
+  GHL_SECRET_KEY: "24bbb39d-0d82-426b-b449-0a188f774fd4"
+  ST_APP_KEY: "ak1.1adfsru83jgc5vi9jz8plxegv"
+  GHL_API_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2NhdGlvbl9pZCI6IlZHWm5kdE9GSHJPNE5JRUxCUVlvIiwiY29tcGFueV9pZCI6IjdJenlBbTJDdHJoa2d6OU5saHpoIiwidmVyc2lvbiI6MSwiaWF0IjoxNjM1MTc5NzM1ODM1LCJzdWIiOiIwOFBtdG05aUtsYVVsam9VYVE5biJ9.LtyEkmD_jIRkFD9wl9pa6aycPwv6_AyFuL772K0DMn4"
+  ST_CLIENT_ID: "cid.24l1pwhc7afdmj0mx5plqtsfl"
+  ST_CLIENT_SECRET: "cs1.w4l7bvzc5ak6zqstg33zxdr5xhdo27puepowbye1yiflqcpkeo"

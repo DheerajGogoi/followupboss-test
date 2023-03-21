@@ -9,7 +9,7 @@ body{
 }
 .title{
     font-weight: bolder;
-    font-size: 3rem;
+    font-size: 1.4rem;
 }
 .title-link{
     text-decoration: none;
@@ -46,11 +46,30 @@ body{
     margin: auto;
     max-width: 1000px;
 }
-.btn-box{
-    text-align: center;
-}
-.send-btn{
-    margin: auto;
-    min-width: 300px;
+
+.success_toast{
+    display: block;
 }
 /* MAIN START */
+
+/* SUCCESS/FAILURE PAGE START */
+.msg_box{
+    width: 400px;
+    text-align: center;
+    margin: auto;
+}
+.msg_img_success{
+    width: 7rem;
+    height: auto;
+}
+.msg_img_fail{
+    width: 2rem;
+    height: auto;
+}
+.msg_text{
+    font-size: 3rem;
+}
+.back-btn{
+    margin-top: 2rem;
+}
+/* SUCCESS/FAILURE PAGE END */

@@ -6,7 +6,7 @@ const path = require('path');
 class DatastoreClient {
     constructor() {
         this.datastore = new Datastore({
-            projectId: "follow-up-boss-testing",
+            projectId: "salesngage-social-posting",
             // keyfile json can be downloaded from the section "API and services in the left menu" and then selecting credentials > service accounts > keys > Add key > Create new key   
             keyFilename: path.join(__dirname, './keyfile.json')
         });
