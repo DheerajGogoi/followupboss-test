@@ -26,10 +26,13 @@ exports.index = async(req, res) => {
     // localStorage.setItem('FUB_Context_Decoded', JSON.stringify(decoded_value)); 
     
     // let account_id = String(decoded_value.account.id);
+
+    //only for testing purpose - will delete later
     let account_id = String(decoded_value.account.id);
     console.log(account_id);
     let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
     
+    //checking if FUBID exists
     if (value.length > 0) {
         // localStorage.setItem('GHL_Details', JSON.stringify(value));
         
@@ -50,11 +53,14 @@ exports.main = async(req, res) => {
 
     // const decoded_value = JSON.parse(localStorage.getItem('FUB_Context_Decoded'))
     // let account_id = String(decoded_value.account.id);
+
+    //only for testing purpose - will delete later
     const decoded_value = await base64ToJson(process.env.DEV_CONTEXT);
     let account_id = String(decoded_value.account.id);
-    
+
     let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
     
+    //checking if FUBID exists
     if (value.length > 0) {
         console.log("Account Id exists.");
         res.render('main', { channel: type });
@@ -83,6 +89,8 @@ exports.send_note = async(req, res) => {
 
     // const ghl_details = JSON.parse(localStorage.getItem('GHL_Details'));
     // let auth_api_key = utf8_to_base64(`${ghl_details[0].FUB_API_KEY}:`);
+
+    //only for testing purpose - will delete later
     const decoded_value = await base64ToJson(process.env.DEV_CONTEXT);
     let account_id = String(decoded_value.account.id);
     let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
@@ -108,11 +116,6 @@ exports.send_note = async(req, res) => {
             
             let type = req.params.type;
             res.render('success', { channel: type });
-            // if(!type){
-            //     res.redirect(`/path/main/sms`);
-            // } else {
-            //     res.render('success', { channel: type });
-            // }
         })
         .catch(err => {
             console.error(err);
