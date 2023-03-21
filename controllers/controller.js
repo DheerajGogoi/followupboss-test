@@ -15,22 +15,23 @@ const base64ToJson = async (base64String) => {
 
 function utf8_to_base64(str) {
     let buff = new Buffer.from(str);
-    let base64data = buff.toString('base64')
+    let base64data = buff.toString('base64');
     return base64data;
 }
 
 exports.index = async(req, res) => {
     const decoded_value = await base64ToJson(req.query.context);
     
-    localStorage.setItem('FUB_Context', req.query.context); 
-    localStorage.setItem('FUB_Context_Decoded', JSON.stringify(decoded_value)); 
+    // localStorage.setItem('FUB_Context', req.query.context); 
+    // localStorage.setItem('FUB_Context_Decoded', JSON.stringify(decoded_value)); 
     
+    // let account_id = String(decoded_value.account.id);
     let account_id = String(decoded_value.account.id);
     console.log(account_id);
     let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
     
     if (value.length > 0) {
-        localStorage.setItem('GHL_Details', JSON.stringify(value));
+        // localStorage.setItem('GHL_Details', JSON.stringify(value));
         
         console.log("Account Id exists.");
         res.redirect(`/path/main/sms`);
@@ -47,8 +48,11 @@ exports.main = async(req, res) => {
         res.redirect(`/path/main/sms`);
     }
 
-    const decoded_value = JSON.parse(localStorage.getItem('FUB_Context_Decoded'))
+    // const decoded_value = JSON.parse(localStorage.getItem('FUB_Context_Decoded'))
+    // let account_id = String(decoded_value.account.id);
+    const decoded_value = await base64ToJson(process.env.DEV_CONTEXT);
     let account_id = String(decoded_value.account.id);
+    
     let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
     
     if (value.length > 0) {
@@ -77,8 +81,13 @@ exports.send_note = async(req, res) => {
     };
     console.log(obj);
 
-    const ghl_details = JSON.parse(localStorage.getItem('GHL_Details'));
-    let auth_api_key = utf8_to_base64(`${ghl_details[0].FUB_API_KEY}:`);
+    // const ghl_details = JSON.parse(localStorage.getItem('GHL_Details'));
+    // let auth_api_key = utf8_to_base64(`${ghl_details[0].FUB_API_KEY}:`);
+    const decoded_value = await base64ToJson(process.env.DEV_CONTEXT);
+    let account_id = String(decoded_value.account.id);
+    let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
+    let auth_api_key = utf8_to_base64(value[0].FUB_API_KEY);
+
     let options = {
         method: 'POST',
         url: 'https://api.followupboss.com/v1/notes',
