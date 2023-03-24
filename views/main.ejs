@@ -27,6 +27,7 @@
                     aria-labelledby="headingOne"
                     data-bs-parent="#accordionExample"
                 >
+                <% console.log(channel) %>
                 <div class="accordion-body">
                     <form
                     onsubmit="formSubmit()"
@@ -36,24 +37,24 @@
                             <label for="select-channel" class="form-label">Channel</label>
                             <select class="form-select" aria-label="Default select example" id="select-channel" name="channel"  onchange="onChange_select(channel)" required>
                                 <option value="SMS"
-                                <% if(channel === "sms"){%>
+                                <% if(channel === "SMS"){ %>
                                     selected
-                                <%}%>
+                                <% } %>
                                 >SMS</option>
                                 <option value="FB"
-                                <% if(channel === "fb"){%>
+                                <% if(channel === "FB"){ %>
                                     selected
-                                <%}%>
+                                <% } %>
                                 >Facebook</option>
                                 <option value="GMB"
-                                <% if(channel === "gmb"){%>
+                                <% if(channel === "GMB"){ %>
                                     selected
-                                <%}%>
+                                <% } %>
                                 >Google My Business</option>
                                 <option value="Instagram"
-                                <% if(channel === "instagram"){%>
+                                <% if(channel === "Instagram"){ %>
                                     selected
-                                <%}%>
+                                <% } %>
                                 >Instagram</option>
                             </select>
                         </div>
@@ -71,11 +72,7 @@
                                     </div>
                                 </button>
                                 <span class="input-group-text" id="basic-addon1">
-                                    <select class="form-select" aria-label="Default select example" name="schedule" required
-                                    <%if(channel !== "sms"){%>
-                                    disabled
-                                    <%}%>
-                                    >
+                                    <select class="form-select" id="channel_select" aria-label="Default select example" name="schedule" required>                                    >
                                         <option value="none" selected>Add Delay</option>
                                         <option value="[2hr]">[2hr]</option>
                                         <option value="[2weeks]">[2weeks]</option>

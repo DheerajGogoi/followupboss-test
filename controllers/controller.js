@@ -33,7 +33,7 @@ exports.index = async(req, res) => {
         //checking if FUBID exists
         if (value.length > 0) {
             console.log("Account Id exists.");
-            res.redirect(`/path/main/sms?personId=${person_id}&accountId=${account_id}`);
+            res.redirect(`/path/main?personId=${person_id}&accountId=${account_id}`);
         }
         else {
             console.log("Account Id not present.");
@@ -47,12 +47,7 @@ exports.main = async(req, res) => {
     if(!req.query.personId || !req.query.accountId){
         res.redirect("/path/fail");
     } else {
-        let type = req.params.type;
-        if(!type){
-            res.redirect(`/path/main/sms?personId=${req.query.personId}&accountId=${req.query.accountId}`);
-        } else {
-            res.render('main', { channel: type, person_id: req.query.personId, account_id: req.query.accountId, action_path: `/path/main/sms?personId=${req.query.personId}&accountId=${req.query.accountId}` });
-        }
+        res.render('main', { channel: "SMS", person_id: req.query.personId, account_id: req.query.accountId, action_path: `/path/main?personId=${req.query.personId}&accountId=${req.query.accountId}` });
     }
 }
 
@@ -102,12 +97,11 @@ exports.send_note = async(req, res) => {
                 response = response.data;
                 console.log(response);
                 
-                let type = req.params.type;
-                res.render('main', { channel: type, person_id: req.query.personId, account_id: req.query.accountId, action_path: `/path/main/sms?personId=${req.query.personId}&accountId=${req.query.accountId}` });
+                res.render('main', { channel: req.body.channel, person_id: req.query.personId, account_id: req.query.accountId, action_path: `/path/main?personId=${req.query.personId}&accountId=${req.query.accountId}` });
             })
             .catch(err => {
                 console.error(err);
-                res.render('failure', { channel: type });
+                res.render('failure');
             });
     }
 }

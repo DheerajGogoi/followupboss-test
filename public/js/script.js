@@ -5,9 +5,11 @@ document.getElementById("loading-status").style.display = "none";
 const onChange_select = (value) => {
     let channel = (value.value).toLowerCase();
     console.log(channel);
-    console.log(window.location);
-    let location = `${window.location.origin}/path/main/${channel}${window.location.search}`;
-    window.location = location;
+    if(channel !== "sms"){
+        document.getElementById("channel_select").disabled = true;
+    } else {
+        document.getElementById("channel_select").disabled = false;
+    }
 }
 
 const goback = () => {
