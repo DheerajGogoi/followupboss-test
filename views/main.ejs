@@ -3,12 +3,7 @@
 <body>
     
     <div class="header-box">
-        <p class="title">
-            <a href="#" class="title-link"
-                ><span class="title-a">Lead</span><span class="title-b">ngage</span
-                ><span class="title-c">.com</span></a
-            >
-        </p>
+        <img src="/img/leadngage_logo.png" alt="" class="img-fluid company-logo">
     </div>
 
     <div class="form-box">
@@ -23,7 +18,7 @@
                     aria-expanded="true"
                     aria-controls="collapseOne"
                 >
-                    <span class="title-a">Lead</span><span class="title-b">ngage</span>
+                    <img src="/img/leadngage_logo.png" alt="" class="img-fluid company-logo">
                 </button>
                 </h2>
                 <div
@@ -33,7 +28,10 @@
                     data-bs-parent="#accordionExample"
                 >
                 <div class="accordion-body">
-                    <form action="/path/main" method="POST">
+                    <form
+                    onsubmit="formSubmit()"
+                    action = "<% action_path %>""
+                    method="POST">
                         <div class="mb-3">
                             <label for="select-channel" class="form-label">Channel</label>
                             <select class="form-select" aria-label="Default select example" id="select-channel" name="channel"  onchange="onChange_select(channel)" required>
@@ -46,12 +44,12 @@
                                 <% if(channel === "fb"){%>
                                     selected
                                 <%}%>
-                                >FB</option>
+                                >Facebook</option>
                                 <option value="GMB"
                                 <% if(channel === "gmb"){%>
                                     selected
                                 <%}%>
-                                >GMB</option>
+                                >Google My Business</option>
                                 <option value="Instagram"
                                 <% if(channel === "instagram"){%>
                                     selected
@@ -66,11 +64,20 @@
 
                         <div class="form-footer">
                             <div class="input-group mb-3 btn-box">
-                                <button type="submit" class="btn btn-success">Send</button>
-                                <%if(channel === "sms"){%>
+                                <button type="submit" class="btn btn-success">
+                                    <span id="btn-text">Send</span>
+                                    <div style="display: none;" class="spinner-border text-light" id="loading-status" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </button>
                                 <span class="input-group-text" id="basic-addon1">
-                                    <select class="form-select" aria-label="Default select example" name="schedule" required>
-                                        <option value="[2hr]" selected>[2hr]</option>
+                                    <select class="form-select" aria-label="Default select example" name="schedule" required
+                                    <%if(channel !== "sms"){%>
+                                    disabled
+                                    <%}%>
+                                    >
+                                        <option value="none" selected>Add Delay</option>
+                                        <option value="[2hr]">[2hr]</option>
                                         <option value="[2weeks]">[2weeks]</option>
                                         <option value="[30days]">[30days]</option>
                                         <option value="[60days]">[60days]</option>
@@ -78,7 +85,6 @@
                                         <option value="[delete]">[delete]</option>
                                     </select>
                                 </span>
-                                <%}%>
                             </div>
                         </div>
 

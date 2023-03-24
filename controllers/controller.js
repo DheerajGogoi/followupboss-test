@@ -8,6 +8,7 @@ const DatastoreClient = require("../services/datastore");
 const LocalStorage = require("node-localstorage").LocalStorage;
 var localStorage = new LocalStorage('./scratch'); 
 
+let decoded_context = {};
 const base64ToJson = async (base64String) => {
     const json = Buffer.from(base64String, "base64").toString();
     return JSON.parse(json);
@@ -20,15 +21,17 @@ function utf8_to_base64(str) {
 }
 
 exports.index = async(req, res) => {
+    // decoded_context = {};
     const decoded_value = await base64ToJson(req.query.context);
-    
+    // decoded_context = decoded_value;
     // localStorage.setItem('FUB_Context', req.query.context); 
     // localStorage.setItem('FUB_Context_Decoded', JSON.stringify(decoded_value)); 
     
-    // let account_id = String(decoded_value.account.id);
+    let account_id = String(decoded_value.account.id);
+    let person_id = decoded_value.person.id;
 
     //only for testing purpose - will delete later
-    let account_id = String(decoded_value.account.id);
+    // let account_id = String(decoded_value.account.id);
     console.log(account_id);
     let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
     
@@ -37,7 +40,7 @@ exports.index = async(req, res) => {
         // localStorage.setItem('GHL_Details', JSON.stringify(value));
         
         console.log("Account Id exists.");
-        res.redirect(`/path/main/sms`);
+        res.redirect(`/path/main/sms?personId=${person_id}&accountId=${account_id}`);
     }
     else {
         console.log("Account Id not present.");
@@ -46,42 +49,50 @@ exports.index = async(req, res) => {
 }
 
 exports.main = async(req, res) => {
+    // console.log(decoded_context);
     let type = req.params.type;
     if(!type){
-        res.redirect(`/path/main/sms`);
+        res.redirect(`/path/main/sms?personId=${req.query.personId}&accountId=${req.query.accountId}`);
+    } else {
+        res.render('main', { channel: type, person_id: req.query.personId, account_id: req.query.accountId, action_path: `/path/main/sms?personId=${req.query.personId}&accountId=${req.query.accountId}` });
     }
 
     // const decoded_value = JSON.parse(localStorage.getItem('FUB_Context_Decoded'))
     // let account_id = String(decoded_value.account.id);
 
     //only for testing purpose - will delete later
-    const decoded_value = await base64ToJson(process.env.DEV_CONTEXT);
-    let account_id = String(decoded_value.account.id);
+    // const decoded_value = await base64ToJson(process.env.DEV_CONTEXT);
+    // let account_id = String(decoded_value.account.id);
 
-    let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
+    // let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
     
     //checking if FUBID exists
-    if (value.length > 0) {
-        console.log("Account Id exists.");
-        res.render('main', { channel: type });
-    }
-    else {
-        console.log("Account Id do not exist.");
-        res.redirect(`/path/index?context=${localStorage.getItem('FUB_Context')}`);
-    }
+    // if (value.length > 0) {
+    //     console.log("Account Id exists.");
+    //     res.render('main', { channel: type });
+    // }
+    // else {
+    //     console.log("Account Id do not exist.");
+    //     res.redirect(`/path/index?context=${localStorage.getItem('FUB_Context')}`);
+    // }
     // res.render('main', { channel: type });
 }
 
 exports.send_note = async(req, res) => {
+    console.log(req.query);
     let message = "";
     if(req.body.schedule){
-        message = `${req.body.schedule} ${req.body.note}`
+        if(req.body.schedule === "none"){
+            message = `SMS ${req.body.note}`
+        } else {
+            message = `${req.body.schedule} ${req.body.note}`
+        }
     } else {
-        message = `${req.body.note}`
+        message = `${req.body.channel} ${req.body.note}`
     }
     let obj = {
-        personId: 12345, //12234
-        subject: "Note",
+        personId: req.query.personId, //12234
+        subject: "Follow Up Boss Note", //leadngage action
         body: message,
         isHtml: false
     };
@@ -91,10 +102,11 @@ exports.send_note = async(req, res) => {
     // let auth_api_key = utf8_to_base64(`${ghl_details[0].FUB_API_KEY}:`);
 
     //only for testing purpose - will delete later
-    const decoded_value = await base64ToJson(process.env.DEV_CONTEXT);
-    let account_id = String(decoded_value.account.id);
+    // const decoded_value = await base64ToJson(process.env.DEV_CONTEXT);
+    // let account_id = String(decoded_value.account.id);
+    let account_id = String(req.query.accountId);
     let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
-    let auth_api_key = utf8_to_base64(value[0].FUB_API_KEY);
+    let auth_api_key = utf8_to_base64(`${value[0].FUB_API_KEY}:`);
 
     let options = {
         method: 'POST',
@@ -115,7 +127,7 @@ exports.send_note = async(req, res) => {
             console.log(response);
             
             let type = req.params.type;
-            res.render('success', { channel: type });
+            res.render('main', { channel: type, person_id: req.query.personId, account_id: req.query.accountId, action_path: `/path/main/sms?personId=${req.query.personId}&accountId=${req.query.accountId}` });
         })
         .catch(err => {
             console.error(err);

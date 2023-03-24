@@ -4,8 +4,11 @@ body{
 
 /* INDEX START */
 .header-box{
-    margin-bottom: 2rem;
+    /* margin-bottom: 2rem; */
     padding: 10px;
+}
+.company-logo{
+    max-width: 120px;
 }
 .title{
     font-weight: bolder;
@@ -46,9 +49,10 @@ body{
     margin: auto;
     max-width: 1000px;
 }
-
-.success_toast{
-    display: block;
+.btn-box{
+    flex-wrap: inherit;
+    width: 220px;
+    margin: auto;
 }
 /* MAIN START */
 
