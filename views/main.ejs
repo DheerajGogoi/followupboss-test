@@ -1,10 +1,6 @@
 <%- include('./partials/header'); %>
 
 <body>
-    
-    <div class="header-box">
-        <img src="/img/leadngage_logo.png" alt="" class="img-fluid company-logo">
-    </div>
 
     <div class="form-box">
         <div class="accordion accordion-custom" id="accordionExample">
@@ -27,71 +23,94 @@
                     aria-labelledby="headingOne"
                     data-bs-parent="#accordionExample"
                 >
-                <% console.log(channel) %>
-                <div class="accordion-body">
-                    <form
-                    onsubmit="formSubmit()"
-                    action = "<% action_path %>""
-                    method="POST">
-                        <div class="mb-3">
-                            <label for="select-channel" class="form-label">Channel</label>
-                            <select class="form-select" aria-label="Default select example" id="select-channel" name="channel"  onchange="onChange_select(channel)" required>
-                                <option value="SMS"
-                                <% if(channel === "SMS"){ %>
-                                    selected
-                                <% } %>
-                                >SMS</option>
-                                <option value="FB"
-                                <% if(channel === "FB"){ %>
-                                    selected
-                                <% } %>
-                                >Facebook</option>
-                                <option value="GMB"
-                                <% if(channel === "GMB"){ %>
-                                    selected
-                                <% } %>
-                                >Google My Business</option>
-                                <option value="Instagram"
-                                <% if(channel === "Instagram"){ %>
-                                    selected
-                                <% } %>
-                                >Instagram</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <textarea class="form-control" id="msg-text" rows="3" placeholder="Enter text" name="note" required></textarea>
-                        </div>
-
-                        <div class="form-footer">
-                            <div class="input-group mb-3 btn-box">
-                                <button type="submit" class="btn btn-success">
-                                    <span id="btn-text">Send</span>
-                                    <div style="display: none;" class="spinner-border text-light" id="loading-status" role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                </button>
-                                <span class="input-group-text" id="basic-addon1">
-                                    <select class="form-select" id="channel_select" aria-label="Default select example" name="schedule" required>                                    >
-                                        <option value="none" selected>Add Delay</option>
-                                        <option value="[2hr]">[2hr]</option>
-                                        <option value="[2weeks]">[2weeks]</option>
-                                        <option value="[30days]">[30days]</option>
-                                        <option value="[60days]">[60days]</option>
-                                        <option value="[90days]">[90days]</option>
-                                        <option value="[delete]">[delete]</option>
-                                    </select>
-                                </span>
+                    <% console.log(channel) %>
+                    <div class="accordion-body">
+                        <form
+                        onsubmit="formSubmit()"
+                        action = "<% action_path %>""
+                        method="POST">
+                            <div class="mb-3">
+                                <label for="select-channel" class="form-label">Channel</label>
+                                <select class="form-select" aria-label="Default select example" id="select-channel" name="channel"  onchange="onChange_select(channel)" required>
+                                    <option value="SMS"
+                                    <% if(channel === "SMS"){ %>
+                                        selected
+                                    <% } %>
+                                    >SMS</option>
+                                    <option value="FB"
+                                    <% if(channel === "FB"){ %>
+                                        selected
+                                    <% } %>
+                                    >Facebook</option>
+                                    <option value="GMB"
+                                    <% if(channel === "GMB"){ %>
+                                        selected
+                                    <% } %>
+                                    >Google My Business</option>
+                                    <option value="IG"
+                                    <% if(channel === "IG"){ %>
+                                        selected
+                                    <% } %>
+                                    >IG</option>
+                                </select>
                             </div>
-                        </div>
 
-                    </form>
-                </div>
+                            <div class="mb-3">
+                                <textarea class="form-control" id="msg-text" rows="3" placeholder="Enter text" name="note" required></textarea>
+                            </div>
+
+                            <div class="form-footer">
+                                <div class="input-group mb-3 btn-box">
+                                    <button type="submit" class="btn btn-success send-btn">
+                                        <span id="btn-text">Send</span>
+                                        <div style="display: none;" class="spinner-border text-light" id="loading-status" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </button>
+                                    <span class="input-group-text" id="basic-addon1">
+                                        <select class="form-select" id="channel_select" aria-label="Default select example" name="schedule" required>                                    >
+                                            <option value="none" selected>Add Delay</option>
+                                            <option value="[2hr]">2 hr</option>
+                                            <option value="[2weeks]">2 weeks</option>
+                                            <option value="[30days]">30 days</option>
+                                            <option value="[60days]">60 days</option>
+                                            <option value="[90days]">90 days</option>
+                                            <option value="[delete]">Delete message in queue</option>
+                                        </select>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Success!</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Messages Deleted in Queue.
+            </div>
+        </div>
+    </div>
+
+    <% console.log(delete_success) %>
+    
     
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+<%if(delete_success){%>
+    <script>
+        const toastLiveExample = document.getElementById('liveToast');
+        const toast = new bootstrap.Toast(toastLiveExample);
+        toast.show();
+    </script>
+<%}%>
 
 <%- include('./partials/footer'); %>

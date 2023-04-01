@@ -47,7 +47,7 @@ exports.main = async(req, res) => {
     if(!req.query.personId || !req.query.accountId){
         res.redirect("/path/fail");
     } else {
-        res.render('main', { channel: "SMS", person_id: req.query.personId, account_id: req.query.accountId, action_path: `/path/main?personId=${req.query.personId}&accountId=${req.query.accountId}` });
+        res.render('main', { channel: "SMS", person_id: req.query.personId, account_id: req.query.accountId, action_path: `/path/main?personId=${req.query.personId}&accountId=${req.query.accountId}`, delete_success: false });
     }
 }
 
@@ -96,12 +96,13 @@ exports.send_note = async(req, res) => {
             .then(response => {
                 response = response.data;
                 console.log(response);
+                let delete_success = req.body.schedule === "[delete]" ? true : false;
                 
-                res.render('main', { channel: req.body.channel, person_id: req.query.personId, account_id: req.query.accountId, action_path: `/path/main?personId=${req.query.personId}&accountId=${req.query.accountId}` });
+                res.render('main', { channel: req.body.channel, person_id: req.query.personId, account_id: req.query.accountId, action_path: `/path/main?personId=${req.query.personId}&accountId=${req.query.accountId}`, delete_success: delete_success });
             })
             .catch(err => {
                 console.error(err);
-                res.render('failure');
+                res.redirect('/path/fail');
             });
     }
 }

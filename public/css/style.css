@@ -45,14 +45,21 @@ body{
 .form-box{
     padding: 1rem;
 }
+.form-box .accordion{
+    margin-top: 2rem;
+}
 .accordion-custom{
     margin: auto;
     max-width: 1000px;
 }
 .btn-box{
     flex-wrap: inherit;
-    width: 220px;
+    width: 320px;
     margin: auto;
+}
+
+.send-btn{
+    background-color: #38B649;
 }
 /* MAIN START */
 
