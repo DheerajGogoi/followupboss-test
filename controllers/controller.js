@@ -26,14 +26,23 @@ exports.index = async(req, res) => {
         
         let account_id = String(decoded_value.account.id);
         let person_id = decoded_value.person.id;
+        let have_contact = decoded_value.person.phones[0].value ? true : false;
+        // let have_contact = false;
 
         console.log(account_id);
         let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
+
+        console.log("ghl key", value.Key);
+
+        // if(!value.CHANNEL){
+        //     value.CHANNEL = "SMS";
+        //     await DatastoreClient.save('Users', "5644523313037312", value);
+        // }
         
         //checking if FUBID exists
         if (value.length > 0) {
             console.log("Account Id exists.");
-            res.redirect(`/path/main?personId=${person_id}&accountId=${account_id}`);
+            res.redirect(`/path/main?personId=${person_id}&accountId=${account_id}&contact=${have_contact}`);
         }
         else {
             console.log("Account Id not present.");
@@ -44,10 +53,10 @@ exports.index = async(req, res) => {
 
 exports.main = async(req, res) => {
 
-    if(!req.query.personId || !req.query.accountId){
+    if(!req.query.personId || !req.query.accountId || !req.query.contact){
         res.redirect("/path/fail");
     } else {
-        res.render('main', { channel: "SMS", person_id: req.query.personId, account_id: req.query.accountId, action_path: `/path/main?personId=${req.query.personId}&accountId=${req.query.accountId}`, delete_success: false });
+        res.render('main', { channel: "SMS", person_id: req.query.personId, account_id: req.query.accountId, have_contact: req.query.contact, action_path: `/path/main?personId=${req.query.personId}&accountId=${req.query.accountId}&contact=${req.query.contact}`, delete_success: false });
     }
 }
 
@@ -98,7 +107,7 @@ exports.send_note = async(req, res) => {
                 console.log(response);
                 let delete_success = req.body.schedule === "[delete]" ? true : false;
                 
-                res.render('main', { channel: req.body.channel, person_id: req.query.personId, account_id: req.query.accountId, action_path: `/path/main?personId=${req.query.personId}&accountId=${req.query.accountId}`, delete_success: delete_success });
+                res.render('main', { channel: req.body.channel, person_id: req.query.personId, account_id: req.query.accountId, have_contact: req.query.contact, action_path: `/path/main?personId=${req.query.personId}&accountId=${req.query.accountId}&contact=${req.query.contact}`, delete_success: delete_success });
             })
             .catch(err => {
                 console.error(err);

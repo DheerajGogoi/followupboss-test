@@ -2,6 +2,10 @@ console.log(window.location);
 document.getElementById("btn-text").style.display = "block";
 document.getElementById("loading-status").style.display = "none";
 
+if(document.getElementById("select-channel").value !== "SMS"){
+    document.getElementById("channel_select").disabled = true;
+}
+
 const onChange_select = (value) => {
     let channel = (value.value).toLowerCase();
     console.log(channel);

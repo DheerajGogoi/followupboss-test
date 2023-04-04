@@ -24,6 +24,7 @@
                     data-bs-parent="#accordionExample"
                 >
                     <% console.log(channel) %>
+                    <% console.log("value", have_contact) %>
                     <div class="accordion-body">
                         <form
                         onsubmit="formSubmit()"
@@ -33,12 +34,14 @@
                                 <label for="select-channel" class="form-label">Channel</label>
                                 <select class="form-select" aria-label="Default select example" id="select-channel" name="channel"  onchange="onChange_select(channel)" required>
                                     <option value="SMS"
-                                    <% if(channel === "SMS"){ %>
+                                    <% if(have_contact === "false"){ %>
+                                        disabled
+                                    <% } else{ %>
                                         selected
                                     <% } %>
                                     >SMS</option>
                                     <option value="FB"
-                                    <% if(channel === "FB"){ %>
+                                    <% if(channel === "FB" && have_contact === "false"){ %>
                                         selected
                                     <% } %>
                                     >Facebook</option>
@@ -51,7 +54,7 @@
                                     <% if(channel === "IG"){ %>
                                         selected
                                     <% } %>
-                                    >IG</option>
+                                    >Instagram</option>
                                 </select>
                             </div>
 
