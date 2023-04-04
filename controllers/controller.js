@@ -31,13 +31,6 @@ exports.index = async(req, res) => {
 
         console.log(account_id);
         let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
-
-        console.log("ghl key", value.Key);
-
-        // if(!value.CHANNEL){
-        //     value.CHANNEL = "SMS";
-        //     await DatastoreClient.save('Users', "5644523313037312", value);
-        // }
         
         //checking if FUBID exists
         if (value.length > 0) {
