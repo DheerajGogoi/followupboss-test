@@ -67,6 +67,7 @@ exports.send_note = async(req, res) => {
         res.redirect("/path/fail");
     } else {
         let message = "";
+        console.log(req.body);
         if(req.body.schedule){
             if(req.body.schedule === "none"){
                 message = `SMS ${req.body.note}`
@@ -74,7 +75,11 @@ exports.send_note = async(req, res) => {
                 message = `${req.body.schedule} ${req.body.note}`
             }
         } else {
-            message = `${req.body.channel} ${req.body.note}`
+            if(req.body.channel === "[delete]"){
+                message = `${req.body.channel}`
+            } else {
+                message = `${req.body.channel} ${req.body.note}`
+            }
         }
         let obj = {
             personId: req.query.personId, //12234

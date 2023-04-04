@@ -37,6 +37,7 @@ body{
 .le-link-btn{
     padding: 1.5rem;
     font-size: 1.5rem;
+    background-color: #38B649;
     /* margin-left: -4rem; */
 }
 /* INDEX END */
@@ -54,7 +55,7 @@ body{
 }
 .btn-box{
     flex-wrap: inherit;
-    width: 320px;
+    width: 220px;
     margin: auto;
 }
 

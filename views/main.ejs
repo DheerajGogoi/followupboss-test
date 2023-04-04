@@ -55,6 +55,11 @@
                                         selected
                                     <% } %>
                                     >Instagram</option>
+                                    <option value="[delete]"
+                                    <% if(channel === "[delete]"){ %>
+                                        selected
+                                    <% } %>
+                                    >Delete message in queue</option>
                                 </select>
                             </div>
 
@@ -78,7 +83,6 @@
                                             <option value="[30days]">30 days</option>
                                             <option value="[60days]">60 days</option>
                                             <option value="[90days]">90 days</option>
-                                            <option value="[delete]">Delete message in queue</option>
                                         </select>
                                     </span>
                                 </div>
