@@ -26,7 +26,8 @@ exports.index = async(req, res) => {
         
         let account_id = String(decoded_value.account.id);
         let person_id = decoded_value.person.id;
-        let have_contact = decoded_value.person.phones[0].value ? true : false;
+        // [0].value
+        let have_contact = decoded_value.person.phones && decoded_value.person.phones.length > 0 && decoded_value.person.phones && decoded_value.person.phones[0] && decoded_value.person.phones[0].value ? true : false;
         // let have_contact = false;
 
         console.log(account_id);
@@ -103,7 +104,7 @@ exports.send_note = async(req, res) => {
             .then(response => {
                 response = response.data;
                 console.log(response);
-                let delete_success = req.body.schedule === "[delete]" ? true : false;
+                let delete_success = req.body.channel === "[delete]" ? true : false;
                 
                 res.render('main', { channel: req.body.channel, person_id: req.query.personId, account_id: req.query.accountId, have_contact: req.query.contact, action_path: `/path/main?personId=${req.query.personId}&accountId=${req.query.accountId}&contact=${req.query.contact}`, delete_success: delete_success });
             })
