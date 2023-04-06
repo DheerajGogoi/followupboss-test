@@ -31,7 +31,6 @@
                         action = "<% action_path %>""
                         method="POST">
                             <div class="mb-3">
-                                <label for="select-channel" class="form-label">Channel</label>
                                 <select class="form-select" aria-label="Default select example" id="select-channel" name="channel"  onchange="onChange_select(channel)" required>
                                     <option value="SMS"
                                     <% if(have_contact === "false"){ %>
@@ -59,7 +58,7 @@
                                     <% if(channel === "[delete]"){ %>
                                         selected
                                     <% } %>
-                                    >Delete message in queue</option>
+                                    >Delete SMS in queue</option>
                                 </select>
                             </div>
 
