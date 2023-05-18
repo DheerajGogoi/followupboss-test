@@ -53,6 +53,9 @@ body{
     margin: auto;
     max-width: 1000px;
 }
+.accordion-btn-edit{
+    height: 40px;
+}
 .btn-box{
     flex-wrap: inherit;
     width: 220px;
@@ -61,6 +64,16 @@ body{
 
 .send-btn{
     background-color: #38B649;
+}
+.bottom-text{
+    width: 100%;
+    text-align: center;
+    color: red;
+    margin-top: -14px;
+}
+.bottom-text p{
+    background-color: white;
+    display: inline-block;
 }
 /* MAIN START */
 
