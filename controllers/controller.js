@@ -71,6 +71,8 @@ exports.send_note = async(req, res) => {
         } else {
             if(req.body.channel === "[delete]"){
                 message = `${req.body.channel}`
+            } else if (req.body.channel === "OPT LEAD OUT-DND") {
+                message = `${req.body.note} [DND]`
             } else {
                 message = `${req.body.channel} ${req.body.note}`
             }
@@ -89,7 +91,7 @@ exports.send_note = async(req, res) => {
 
         let options = {
             method: 'POST',
-            url: 'https://api.followupboss.com/v1/notes',
+            url: process.env.NOTE_URL,
             headers: {
                 accept: 'application/json',
                 'content-type': 'application/json',
