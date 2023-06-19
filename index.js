@@ -13,7 +13,7 @@ const requestQueue = [];
 // Apply rate limiting middleware with custom handler
 const limiter = rateLimiter({
     max: 4,
-    windowMs: 1000 * 60,
+    windowMs: 1000,
     handler: (req, res, next) => {
         requestQueue.push({ req, res, next });
     },
