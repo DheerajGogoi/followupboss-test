@@ -6,7 +6,7 @@ if(document.getElementById("select-channel").value !== "SMS"){
     document.getElementById("channel_select").disabled = true;
 }
 
-if(document.getElementById("select-channel").value === "[delete]"){
+if(document.getElementById("select-channel").value === "[delete]" || document.getElementById("select-channel").value === "opt lead out-dnd" || document.getElementById("select-channel").value === "OPT LEAD OUT-DND"){
     document.getElementById("msg-text").style.display = "none";
     document.getElementById("msg-text").required = false;
 } else {
@@ -17,7 +17,7 @@ if(document.getElementById("select-channel").value === "[delete]"){
 const onChange_select = (value) => {
     let channel = (value.value).toLowerCase();
     console.log(channel);
-    if(channel === "[delete]"){
+    if(channel === "[delete]" || channel === "opt lead out-dnd"){
         document.getElementById("msg-text").style.display = "none";
         document.getElementById("msg-text").required = false;
     } else {

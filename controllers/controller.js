@@ -72,7 +72,7 @@ exports.send_note = async(req, res) => {
             if(req.body.channel === "[delete]"){
                 message = `${req.body.channel}`
             } else if (req.body.channel === "OPT LEAD OUT-DND") {
-                message = `${req.body.note} [DND]`
+                message = `[DND]`
             } else {
                 message = `${req.body.channel} ${req.body.note}`
             }
@@ -116,10 +116,6 @@ exports.send_note = async(req, res) => {
             });
     }
 }
-
-// exports.success = async(req, res) => {
-//     res.render('success');
-// }
 
 exports.fail = async(req, res) => {
     res.render('failure');
