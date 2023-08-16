@@ -92,7 +92,7 @@ exports.send_note = async(req, res) => {
         let options = {
             method: 'POST',
             // url: process.env.NOTE_URL,
-            url: "https://hook.us1.make.com/uxw85hfc9z2ua7ndnmyxexqwblob5qfb",
+            url: "https://api.followupboss.com/v1/notes",
             headers: {
                 accept: 'application/json',
                 'content-type': 'application/json',
