@@ -62,23 +62,30 @@ exports.send_note = async(req, res) => {
     } else {
         let message = "";
         console.log(req.body);
-        if(req.body.schedule){
-            if(req.body.schedule === "none"){
-                message = `SMS ${req.body.note}`
+        if(req.body.channel){
+            if(req.body.schedule){
+                if(req.body.schedule === "none"){
+                    message = `SMS ${req.body.note}`
+                } else {
+                    message = `${req.body.schedule} ${req.body.note}`
+                }
             } else {
-                message = `${req.body.schedule} ${req.body.note}`
+                if(req.body.channel === "[delete]"){
+                    message = `${req.body.channel}`
+                } else if (req.body.channel === "OPT LEAD OUT-DND") {
+                    message = `[DND]`
+                } else if (req.body.channel === "Ask.Ai - Beta") {
+                    message = `[Ask.Ai] ${req.body.note}`
+                } else {
+                    message = `${req.body.channel} ${req.body.note}`
+                }
             }
         } else {
-            if(req.body.channel === "[delete]"){
-                message = `${req.body.channel}`
-            } else if (req.body.channel === "OPT LEAD OUT-DND") {
-                message = `[DND]`
-            } else {
-                message = `${req.body.channel} ${req.body.note}`
-            }
+            message = `[Call Connect]`;
         }
+
         let obj = {
-            personId: req.query.personId, //12234
+            personId: req.query.personId, //123
             subject: "Follow Up Boss Note", //leadngage action
             body: message,
             isHtml: false
@@ -116,6 +123,36 @@ exports.send_note = async(req, res) => {
                 res.redirect('/path/fail');
             });
     }
+}
+
+exports.get_person = async(req, res) => {
+    console.log(req.body);
+    
+    let person_id = req.body.personId;
+    let account_id = String(req.query.accountId);
+    let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
+    let auth_api_key = utf8_to_base64(`${value[0].FUB_API_KEY}:`);
+    let options = {
+        method: 'GET',
+        url: `https://api.followupboss.com/v1/people/${person_id}`,
+        headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            authorization: `Basic ${auth_api_key}`
+        }
+    };
+
+    console.log(options);
+    
+    axios(options)
+        .then(response => {
+            response = response.data;
+            console.log(response);
+            return res.status(200).json(response);
+        })
+        .catch(err => {
+            console.error(err);
+        });
 }
 
 exports.fail = async(req, res) => {

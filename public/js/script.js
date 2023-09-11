@@ -2,6 +2,10 @@ console.log(window.location);
 document.getElementById("btn-text").style.display = "block";
 document.getElementById("loading-status").style.display = "none";
 
+//for ai textarea
+document.getElementById("ai-text").style.display = "none";
+document.getElementById("ai-text").required = false;
+
 if(document.getElementById("select-channel").value !== "SMS"){
     document.getElementById("channel_select").disabled = true;
 }
@@ -9,7 +13,19 @@ if(document.getElementById("select-channel").value !== "SMS"){
 if(document.getElementById("select-channel").value === "[delete]" || document.getElementById("select-channel").value === "opt lead out-dnd" || document.getElementById("select-channel").value === "OPT LEAD OUT-DND"){
     document.getElementById("msg-text").style.display = "none";
     document.getElementById("msg-text").required = false;
+
+    document.getElementById("ai-text").style.display = "none";
+    document.getElementById("ai-text").required = false;
+} else if (document.getElementById("select-channel").value === "ask.ai - beta" || document.getElementById("select-channel").value === "Ask.Ai - Beta"){
+    document.getElementById("msg-text").style.display = "none";
+    document.getElementById("msg-text").required = false;
+
+    document.getElementById("ai-text").style.display = "block";
+    document.getElementById("ai-text").required = true;
 } else {
+    document.getElementById("ai-text").style.display = "none";
+    document.getElementById("ai-text").required = false;
+
     document.getElementById("msg-text").style.display = "block";
     document.getElementById("msg-text").required = true;
 }
@@ -20,9 +36,21 @@ const onChange_select = (value) => {
     if(channel === "[delete]" || channel === "opt lead out-dnd"){
         document.getElementById("msg-text").style.display = "none";
         document.getElementById("msg-text").required = false;
+
+        document.getElementById("ai-text").style.display = "none";
+        document.getElementById("ai-text").required = false;
+    } else if (channel === "ask.ai - beta") {
+        document.getElementById("msg-text").style.display = "none";
+        document.getElementById("msg-text").required = false;
+
+        document.getElementById("ai-text").style.display = "block";
+        document.getElementById("ai-text").required = true;
     } else {
         document.getElementById("msg-text").style.display = "block";
         document.getElementById("msg-text").required = true;
+
+        document.getElementById("ai-text").style.display = "none";
+        document.getElementById("ai-text").required = false;
     }
     
     if(channel !== "sms"){
@@ -39,4 +67,41 @@ const goback = () => {
 const formSubmit = () => {
     document.getElementById("btn-text").style.display = "none";
     document.getElementById("loading-status").style.display = "block";
+}
+
+const connectCall = () => {
+    document.getElementById("call-text").style.display = "none";
+    document.getElementById("call-loading").style.display = "block";
+}
+
+$(document).ready(function() {
+    $("#submitButton").click(function() {
+        // var formData = $("#postForm").serialize();
+
+        console.log("button click");
+        
+
+        // $.ajax({
+        //     type: "POST",
+        //     url: "/your-post-route",
+        //     data: formData,
+        //     success: function(response) {
+        //         console.log("POST request successful");
+        //     },
+        //     error: function(error) {
+        //         // Handle any errors that occur during the POST request
+        //         console.error("Error sending POST request:", error);
+        //     }
+        // });
+    });
+});
+
+const send_call_connect = async (req, res) => {
+    console.log(req.query);
+    
+    if(!req.query.personId || !req.query.accountId){
+        res.redirect("/path/fail");
+    } else {
+        
+    }
 }

@@ -60,6 +60,7 @@ body{
     flex-wrap: inherit;
     width: 220px;
     margin: auto;
+    margin-right: 0;
 }
 
 .send-btn{

@@ -59,6 +59,11 @@
                                         selected
                                     <% } %>
                                     >OPT LEAD OUT-DND</option>
+                                    <option value="Ask.Ai - Beta"
+                                    <% if(channel === "Ask.Ai - Beta"){ %>
+                                        selected
+                                    <% } %>
+                                    >Ask.Ai - Beta</option>
                                     <option value="[delete]"
                                     <% if(channel === "[delete]"){ %>
                                         selected
@@ -68,7 +73,9 @@
                             </div>
 
                             <div class="mb-3">
-                                <textarea class="form-control" id="msg-text" rows="2" placeholder="Enter text" name="note" required></textarea>
+                                <textarea class="form-control" id="msg-text" rows="2" placeholder="Enter text -only text opted in contacts or people you know or know you." name="note" required></textarea>
+                                
+                                <textarea class="form-control" id="ai-text" rows="2" placeholder="Type in your question to AI here." name="note" required></textarea>
                             </div>
 
                             <div class="form-footer">
@@ -91,14 +98,30 @@
                                     </span>
                                 </div>
                             </div>
-
                         </form>
+                        <div style="margin-top: -67px">
+                            <div>
+                                <form
+                                    id="postForm"
+                                    onsubmit="connectCall()"
+                                    action = "<% action_path %>""
+                                    method="POST"
+                                >
+                                    <button type="submit" class="btn btn-primary" style="background: #0197d2; height: 51.2px;" id="submitButton">
+                                        <span id="call-text" style="font-weight: bold;">Call - Beta</span>
+                                        <div style="display: none;" class="spinner-border text-light" id="call-loading" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </button>
+                                </form>
+                            </div>
+                            <div style="margin-top: 10px;">
+                                <a href="https://app.leadngage.com" target="_blank" class="btn btn-primary w-100" role="button" style="font-weight: bold; background: #0197d2;">LOGIN</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="bottom-text">
-            <p>**Only Text Opted in Contacts**</p>
         </div>
     </div>
 
