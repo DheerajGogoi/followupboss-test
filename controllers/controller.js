@@ -202,8 +202,8 @@ exports.update_credentails = async(req, res) => {
         try {
             const { Agent_Phone, Business_Name, FUBID, FUB_API_KEY, GHLID, GHL_API_KEY, GHL_FB, GHL_GMB, GHL_IG, GHL_SMS, GHL_WHISPER_MESSAGE_ID, OPENAI_KEY, TWILIO_AUTH, TWILIO_PHONE_1, TWILIO_SID } = req.body;
 
-            if(!FUBID) return res.status(404).json({ success: false, message: "FUBID not present" })
-            let value = await DatastoreClient.FindByValue('Users', "FUBID", String(FUBID));
+            if(!GHLID) return res.status(404).json({ success: false, message: "GHLID not present" })
+            let value = await DatastoreClient.FindByValue('Users', "GHLID", String(GHLID));
             // console.log(value);
             if(value && value.length > 0){
                 const id = value[0].key.id;
