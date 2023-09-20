@@ -3,7 +3,6 @@ const datastore = new Datastore();
 const axios = require('axios');
 const qs = require('qs');
 const crypto = require('crypto');
-const sdk = require('api')('@boss/v1.0#4bvbllz7rv6w');
 require('dotenv').config();
 const DatastoreClient = require("../services/datastore");
 
