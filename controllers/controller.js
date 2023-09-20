@@ -71,12 +71,17 @@ exports.send_note = async(req, res) => {
     } else {
         let message = "";
         console.log(req.body);
+        let note = req.body.note;
+        if (Array.isArray(note)) {
+            note = note.filter((str) => str.trim() !== '');
+            note = note.join('');
+        }
         if(req.body.channel){
             if(req.body.schedule){
                 if(req.body.schedule === "none"){
-                    message = `SMS ${req.body.note}`
+                    message = `SMS ${note}`
                 } else {
-                    message = `${req.body.schedule} ${req.body.note}`
+                    message = `${req.body.schedule} ${note}`
                 }
             } else {
                 if(req.body.channel === "[delete]"){
@@ -84,9 +89,9 @@ exports.send_note = async(req, res) => {
                 } else if (req.body.channel === "OPT LEAD OUT-DND") {
                     message = `[DND]`
                 } else if (req.body.channel === "Ask.Ai - Beta") {
-                    message = `[Ask.Ai] ${req.body.note}`
+                    message = `[Ask.Ai] ${note}`
                 } else {
-                    message = `${req.body.channel} ${req.body.note}`
+                    message = `${req.body.channel} ${note}`
                 }
             }
         } else {

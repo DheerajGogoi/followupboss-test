@@ -28,7 +28,7 @@
                     <div class="accordion-body">
                         <form
                         onsubmit="formSubmit()"
-                        action = "<% action_path %>""
+                        action = "<% action_path %>"
                         method="POST">
                             <div class="mb-3">
                                 <select class="form-select" aria-label="Default select example" id="select-channel" name="channel"  onchange="onChange_select(channel)" required>
@@ -87,7 +87,7 @@
                                         </div>
                                     </button>
                                     <span class="input-group-text sms-delay" id="basic-addon1">
-                                        <select class="form-select" id="channel_select" aria-label="Default select example" name="schedule" required>                                    >
+                                        <select class="form-select" id="channel_select" aria-label="Default select example" name="schedule" required>
                                             <option value="none" selected>Add Delay</option>
                                             <option value="[2hr]">2 hr</option>
                                             <option value="[2weeks]">2 weeks</option>
@@ -104,7 +104,7 @@
                                 <form
                                     id="postForm"
                                     onsubmit="connectCall()"
-                                    action = "<% action_path %>""
+                                    action = "<% action_path %>"
                                     method="POST"
                                 >
                                     <button type="submit" class="btn btn-primary connect-btn" id="submitButton">
