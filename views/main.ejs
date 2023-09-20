@@ -86,7 +86,7 @@
                                             <span class="visually-hidden">Loading...</span>
                                         </div>
                                     </button>
-                                    <span class="input-group-text" id="basic-addon1">
+                                    <span class="input-group-text sms-delay" id="basic-addon1">
                                         <select class="form-select" id="channel_select" aria-label="Default select example" name="schedule" required>                                    >
                                             <option value="none" selected>Add Delay</option>
                                             <option value="[2hr]">2 hr</option>
@@ -99,7 +99,7 @@
                                 </div>
                             </div>
                         </form>
-                        <div style="margin-top: -67px">
+                        <div class="connect-login">
                             <div>
                                 <form
                                     id="postForm"
@@ -107,7 +107,7 @@
                                     action = "<% action_path %>""
                                     method="POST"
                                 >
-                                    <button type="submit" class="btn btn-primary" style="background: #0197d2; height: 51.2px;" id="submitButton">
+                                    <button type="submit" class="btn btn-primary connect-btn" id="submitButton">
                                         <span id="call-text" style="font-weight: bold;">Call - Beta</span>
                                         <div style="display: none;" class="spinner-border text-light" id="call-loading" role="status">
                                             <span class="visually-hidden">Loading...</span>

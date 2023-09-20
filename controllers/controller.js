@@ -3,6 +3,7 @@ const datastore = new Datastore();
 const axios = require('axios');
 const qs = require('qs');
 const crypto = require('crypto');
+const sdk = require('api')('@boss/v1.0#4bvbllz7rv6w');
 require('dotenv').config();
 const DatastoreClient = require("../services/datastore");
 
@@ -16,6 +17,14 @@ function utf8_to_base64(str) {
     let base64data = buff.toString('base64');
     return base64data;
 }
+
+function stringToBase64(inputString) {
+    const utf8Encoder = new TextEncoder();
+    const data = utf8Encoder.encode(inputString);
+    const base64String = btoa(String.fromCharCode(...data));
+    return base64String;
+}
+  
 
 exports.index = async(req, res) => {
 
@@ -94,7 +103,11 @@ exports.send_note = async(req, res) => {
 
         let account_id = String(req.query.accountId);
         let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
-        let auth_api_key = utf8_to_base64(`${value[0].FUB_API_KEY}:`);
+        
+        const base64String = stringToBase64((value[0].FUB_API_KEY).trim()+":");
+        console.log(base64String);
+        // let auth_api_key = utf8_to_base64(`${value[0].FUB_API_KEY}:`);
+        let auth_api_key = base64String;
 
         let options = {
             method: 'POST',
@@ -126,33 +139,98 @@ exports.send_note = async(req, res) => {
 }
 
 exports.get_person = async(req, res) => {
-    console.log(req.body);
-    
-    let person_id = req.body.personId;
-    let account_id = String(req.query.accountId);
-    let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
-    let auth_api_key = utf8_to_base64(`${value[0].FUB_API_KEY}:`);
-    let options = {
-        method: 'GET',
-        url: `https://api.followupboss.com/v1/people/${person_id}`,
-        headers: {
-            accept: 'application/json',
-            'content-type': 'application/json',
-            authorization: `Basic ${auth_api_key}`
-        }
-    };
+    res.set('Access-Control-Allow-Origin', '*');
+    if (req.method === 'OPTIONS') {
+        res.set('Access-Control-Allow-Methods', 'GET');
+        res.set('Access-Control-Allow-Headers', 'Content-Type');
+        res.set('Access-Control-Max-Age', '3600');
+        res.status(204).send('');
+    } else {
+        try {
+            let person_id = req.body.person.id;
+            let account_id = String(req.body.account.id);
+            let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
+            
+            const base64String = stringToBase64((value[0].FUB_API_KEY).trim()+":");
+            // console.log(base64String);
 
-    console.log(options);
-    
-    axios(options)
-        .then(response => {
-            response = response.data;
-            console.log(response);
-            return res.status(200).json(response);
-        })
-        .catch(err => {
-            console.error(err);
-        });
+            let auth_api_key = base64String;
+            let options = {
+                method: 'GET',
+                url: `https://api.followupboss.com/v1/people/${person_id}`,
+                headers: {
+                    accept: 'application/json',
+                    'content-type': 'application/json',
+                    authorization: `Basic ${auth_api_key}`
+                }
+            };
+            const person_response = await axios(options);
+            
+            let config = {
+                method: 'POST',
+                url: `https://hook.us1.make.com/uxw85hfc9z2ua7ndnmyxexqwblob5qfb`,
+                headers: {
+                    accept: 'application/json',
+                    'content-type': 'application/json'
+                },
+                data: person_response.data
+            };
+            const hook_response = await axios(config);
+            console.log(person_response.data);
+            console.log(hook_response.data);
+
+            return res.status(200).json(person_response.data);
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    }
+}
+
+exports.update_credentails = async(req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    if (req.method === 'OPTIONS') {
+        res.set('Access-Control-Allow-Methods', 'GET');
+        res.set('Access-Control-Allow-Headers', 'Content-Type');
+        res.set('Access-Control-Max-Age', '3600');
+        res.status(204).send('');
+    } else {
+        try {
+            const { Agent_Phone, Business_Name, FUBID, FUB_API_KEY, GHLID, GHL_API_KEY, GHL_FB, GHL_GMB, GHL_IG, GHL_SMS, GHL_WHISPER_MESSAGE_ID, OPENAI_KEY, TWILIO_AUTH, TWILIO_PHONE_1, TWILIO_SID } = req.body;
+
+            if(!FUBID) return res.status(404).json({ success: false, message: "FUBID not present" })
+            let value = await DatastoreClient.FindByValue('Users', "FUBID", String(FUBID));
+            // console.log(value);
+            if(value && value.length > 0){
+                const id = value[0].key.id;
+                value = value[0].entity
+                if (Agent_Phone !== undefined) value.Agent_Phone = Agent_Phone;
+                if (Business_Name !== undefined) value.Business_Name = Business_Name;
+                if (FUBID !== undefined) value.FUBID = FUBID;
+                if (FUB_API_KEY !== undefined) value.FUB_API_KEY = FUB_API_KEY;
+                if (GHLID !== undefined) value.GHLID = GHLID;
+                if (GHL_API_KEY !== undefined) value.GHL_API_KEY = GHL_API_KEY;
+                if (GHL_FB !== undefined) value.GHL_FB = GHL_FB;
+                if (GHL_GMB !== undefined) value.GHL_GMB = GHL_GMB;
+                if (GHL_IG !== undefined) value.GHL_IG = GHL_IG;
+                if (GHL_SMS !== undefined) value.GHL_SMS = GHL_SMS;
+                if (GHL_WHISPER_MESSAGE_ID !== undefined) value.GHL_WHISPER_MESSAGE_ID = GHL_WHISPER_MESSAGE_ID;
+                if (OPENAI_KEY !== undefined) value.OPENAI_KEY = OPENAI_KEY;
+                if (TWILIO_AUTH !== undefined) value.TWILIO_AUTH = TWILIO_AUTH;
+                if (TWILIO_PHONE_1 !== undefined) value.TWILIO_PHONE_1 = TWILIO_PHONE_1;
+                if (TWILIO_SID !== undefined) value.TWILIO_SID = TWILIO_SID;
+
+                await DatastoreClient.save('Users', Number(id), value);
+                return res.status(200).json(value)
+            } else {
+                return res.status(404).json({
+                    success: false,
+                    message: "Account not found."
+                });
+            } 
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    }
 }
 
 exports.fail = async(req, res) => {

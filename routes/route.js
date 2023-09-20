@@ -6,6 +6,7 @@ router.get('/main', Controller.main);
 router.get('/main/:type', Controller.main);
 router.post('/main', Controller.send_note);
 router.post('/get_person', Controller.get_person);
+router.post('/update_credentails', Controller.update_credentails);
 router.get('/error', Controller.index);
 // router.get('/success', Controller.success);
 router.get('/fail', Controller.fail);

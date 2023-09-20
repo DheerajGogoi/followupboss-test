@@ -73,35 +73,3 @@ const connectCall = () => {
     document.getElementById("call-text").style.display = "none";
     document.getElementById("call-loading").style.display = "block";
 }
-
-$(document).ready(function() {
-    $("#submitButton").click(function() {
-        // var formData = $("#postForm").serialize();
-
-        console.log("button click");
-        
-
-        // $.ajax({
-        //     type: "POST",
-        //     url: "/your-post-route",
-        //     data: formData,
-        //     success: function(response) {
-        //         console.log("POST request successful");
-        //     },
-        //     error: function(error) {
-        //         // Handle any errors that occur during the POST request
-        //         console.error("Error sending POST request:", error);
-        //     }
-        // });
-    });
-});
-
-const send_call_connect = async (req, res) => {
-    console.log(req.query);
-    
-    if(!req.query.personId || !req.query.accountId){
-        res.redirect("/path/fail");
-    } else {
-        
-    }
-}

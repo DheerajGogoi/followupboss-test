@@ -76,7 +76,29 @@ body{
     background-color: white;
     display: inline-block;
 }
-/* MAIN START */
+.connect-login{
+    margin-top: -67px
+}
+.connect-btn{
+    background: #0197d2;
+    height: 51.2px;
+}
+@media (max-width: 370px) {
+    .btn-box{
+        width: 100%;
+    }
+    .connect-login{
+        margin-top: 0
+    }
+    .connect-btn{
+        width: 100%;
+        height: auto;
+    }
+    .sms-delay{
+        width: 100%;
+    }
+}
+/* MAIN END */
 
 /* SUCCESS/FAILURE PAGE START */
 .msg_box{

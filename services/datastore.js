@@ -1,4 +1,5 @@
 const { Datastore } = require('@google-cloud/datastore');
+const datastore = new Datastore();
 const path = require('path');
 // Datastore is a noSQL database that is used to store data.
 // Just for example, kind corresponds to the relations in sql. And name corresponds to the "primary key" in sql.  
@@ -95,6 +96,23 @@ class DatastoreClient {
         const query = await this.datastore.createQuery(kind).filter(arrName, '=', val);
         const [result] = await this.datastore.runQuery(query);
         return result;
+    }
+    async FindByValue(kind, arrName, val) {
+        /* 
+        search for a field in an array in datastore for the corresponding kind and name.
+        and return all the entries that match the value in their array field.
+        eg- ArrLookUp("User", "phoneNumbers", "+91656654565")
+         */
+        const query = this.datastore.createQuery(kind).filter(arrName, '=', val);
+        const [entities] = await this.datastore.runQuery(query);
+
+        // Extract key IDs from entities and create a result array
+        const results = entities.map((entity) => ({
+            key: entity[this.datastore.KEY],
+            entity: entity,
+        }));
+
+        return results;
     }
     async FilterEquals(kind, v1, v2) {
         /* 
