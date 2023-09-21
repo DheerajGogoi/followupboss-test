@@ -73,9 +73,9 @@
                             </div>
 
                             <div class="mb-3">
-                                <textarea class="form-control" id="msg-text" rows="2" placeholder="Enter text -only text opted in contacts or people you know or know you." name="note" required></textarea>
+                                <textarea class="form-control light-placeholder" id="msg-text" rows="2" placeholder="Enter text -only text opted in contacts or people you know or know you." name="note" required></textarea>
                                 
-                                <textarea class="form-control" id="ai-text" rows="2" placeholder="Type in your question to AI here." name="note" required></textarea>
+                                <textarea class="form-control light-placeholder" id="ai-text" rows="2" placeholder="Type in your question to AI here." name="note" required></textarea>
                             </div>
 
                             <div class="form-footer">
@@ -108,7 +108,8 @@
                                     method="POST"
                                 >
                                     <button type="submit" class="btn btn-primary connect-btn" id="submitButton">
-                                        <span id="call-text" style="font-weight: bold;">Call - Beta</span>
+                                        <span id="call-text">Call Connect</span>
+                                        <span id="call-subtext">Beta</span>
                                         <div style="display: none;" class="spinner-border text-light" id="call-loading" role="status">
                                             <span class="visually-hidden">Loading...</span>
                                         </div>

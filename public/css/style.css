@@ -83,6 +83,15 @@ body{
     background: #0197d2;
     height: 51.2px;
 }
+#call-subtext{
+    font-size: 11px;
+    display: block;
+    margin-top: -4px;
+}
+.light-placeholder::placeholder{
+    font-size: 14px;
+    color: rgb(186, 186, 186);
+}
 @media (max-width: 370px) {
     .btn-box{
         width: 100%;

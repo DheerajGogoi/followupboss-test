@@ -131,8 +131,9 @@ exports.send_note = async(req, res) => {
                 response = response.data;
                 console.log(response);
                 let delete_success = req.body.channel === "[delete]" ? true : false;
-                req.body.channel = "SMS";
-                // console.log("current channel", req.body.channel)
+                console.log("before", req.body.channel)
+                if(req.body.channel === undefined) req.body.channel = "SMS";
+                console.log("after", req.body.channel)
                 
                 res.render('main', { channel: req.body.channel, person_id: req.query.personId, account_id: req.query.accountId, have_contact: req.query.contact, action_path: `/path/main?personId=${req.query.personId}&accountId=${req.query.accountId}&contact=${req.query.contact}`, delete_success: delete_success });
             })
