@@ -5,6 +5,7 @@ const qs = require('qs');
 const crypto = require('crypto');
 require('dotenv').config();
 const DatastoreClient = require("../services/datastore");
+const btoa = require('btoa-lite');
 
 const base64ToJson = async (base64String) => {
     const json = Buffer.from(base64String, "base64").toString();
