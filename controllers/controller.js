@@ -109,13 +109,11 @@ exports.send_note = async(req, res) => {
         let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
         
         const base64String = stringToBase64((value[0].FUB_API_KEY).trim()+":");
-        console.log(base64String);
-        // let auth_api_key = utf8_to_base64(`${value[0].FUB_API_KEY}:`);
+        // console.log(base64String);
         let auth_api_key = base64String;
 
         let options = {
             method: 'POST',
-            // url: process.env.NOTE_URL,
             url: "https://api.followupboss.com/v1/notes",
             headers: {
                 accept: 'application/json',
@@ -132,6 +130,8 @@ exports.send_note = async(req, res) => {
                 response = response.data;
                 console.log(response);
                 let delete_success = req.body.channel === "[delete]" ? true : false;
+                req.body.channel = "SMS";
+                // console.log("current channel", req.body.channel)
                 
                 res.render('main', { channel: req.body.channel, person_id: req.query.personId, account_id: req.query.accountId, have_contact: req.query.contact, action_path: `/path/main?personId=${req.query.personId}&accountId=${req.query.accountId}&contact=${req.query.contact}`, delete_success: delete_success });
             })
@@ -151,12 +151,11 @@ exports.get_person = async(req, res) => {
         res.status(204).send('');
     } else {
         try {
-            let person_id = req.body.person.id;
-            let account_id = String(req.body.account.id);
-            let value = await DatastoreClient.ArrLookUp('Users', "FUBID", account_id);
+            let person_id = Number(req.body.PERONSID);
+            let GHLID = String(req.body.GHLID);
+            let value = await DatastoreClient.ArrLookUp('Users', "GHLID", GHLID);
             
             const base64String = stringToBase64((value[0].FUB_API_KEY).trim()+":");
-            // console.log(base64String);
 
             let auth_api_key = base64String;
             let options = {
@@ -177,13 +176,13 @@ exports.get_person = async(req, res) => {
                     accept: 'application/json',
                     'content-type': 'application/json'
                 },
-                data: person_response.data
+                data: { ...req.body, ...person_response.data }
             };
             const hook_response = await axios(config);
             console.log(person_response.data);
             console.log(hook_response.data);
 
-            return res.status(200).json(person_response.data);
+            return res.status(200).json({ ...req.body, ...person_response.data });
         } catch (error) {
             return res.status(500).json(error);
         }
