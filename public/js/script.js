@@ -71,5 +71,6 @@ const formSubmit = () => {
 
 const connectCall = () => {
     document.getElementById("call-text").style.display = "none";
+    document.getElementById("call-subtext").style.display = "none";
     document.getElementById("call-loading").style.display = "block";
 }
