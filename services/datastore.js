@@ -97,13 +97,23 @@ class DatastoreClient {
         const [result] = await this.datastore.runQuery(query);
         return result;
     }
+    async FindBy(kind, arrName, val) {
+        /* 
+        search for a field in an array in datastore for the corresponding kind and name.
+        and return all the entries that match the value in their array field.
+        eg- ArrLookUp("User", "phoneNumbers", "+91656654565")
+         */
+        const query = await this.datastore.createQuery(kind).filter(arrName, '=', val);
+        const [result] = await this.datastore.runQuery(query);
+        return [result, result[0][this.datastore.KEY]];
+    }
     async FindByValue(kind, arrName, val) {
         /* 
         search for a field in an array in datastore for the corresponding kind and name.
         and return all the entries that match the value in their array field.
         eg- ArrLookUp("User", "phoneNumbers", "+91656654565")
          */
-        const query = this.datastore.createQuery(kind).filter(arrName, '=', val);
+        const query = await this.datastore.createQuery(kind).filter(arrName, '=', val);
         const [entities] = await this.datastore.runQuery(query);
 
         // Extract key IDs from entities and create a result array

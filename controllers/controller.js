@@ -238,6 +238,129 @@ exports.update_credentails = async(req, res) => {
     }
 }
 
+function filterArrayByElements(array1, array2) {
+    return array1.filter(element => array2.includes(element));
+}
+
+exports.fub_tags = async(req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    if (req.method === 'OPTIONS') {
+        res.set('Access-Control-Allow-Methods', 'GET');
+        res.set('Access-Control-Allow-Headers', 'Content-Type');
+        res.set('Access-Control-Max-Age', '3600');
+        res.status(204).send('');
+    } else {
+        try {
+            var knownTags = process.env.CONDITIONS.split(",");
+            let added_tags = req.body.data
+            let person_ids = req.body.resourceIds;
+
+            console.log("Payload", {
+                person_ids,
+                added_tags
+            });
+            console.log("Known Tags", knownTags);
+
+            let available_tags = filterArrayByElements(knownTags, added_tags.tags)
+
+            if(available_tags.length > 0){
+                let config = {
+                    method: 'POST',
+                    url: `https://hkdk.events/m4TCy4Ea8mIO?process=tags`,
+                    headers: {
+                        accept: 'application/json',
+                        'content-type': 'application/json'
+                    },
+                    data: {
+                        person_ids,
+                        tags: available_tags
+                    }
+                };
+                const hook_response = await axios(config);
+            }
+            return res.status(200).json({
+                person_ids,
+                tags: available_tags
+            });
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    }
+}
+
+const get_ghl_token = async (code, grant_type = 'authorization_code', refresh_token = '') => {
+    try {
+
+        let config = {
+            client_id: process.env.GHL_CLIENT_ID,
+            client_secret: process.env.GHL_CLIENT_SECRET,
+            grant_type: grant_type,
+            code: code,
+            refresh_token: refresh_token
+        };
+        let options = {
+            method: 'POST',
+            url: 'https://services.leadconnectorhq.com/oauth/token',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            data: new URLSearchParams(config)
+        };
+
+        let response = await axios(options);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}
+
+exports.ghl_auth = async(req, res) => {
+    let value = null;
+    res.set('Access-Control-Allow-Origin', '*');
+    if (req.method === 'OPTIONS') {
+        res.set('Access-Control-Allow-Methods', 'GET');
+        res.set('Access-Control-Allow-Headers', 'Content-Type');
+        res.set('Access-Control-Max-Age', '3600');
+        res.status(204).send('');
+    } else {
+        try {
+            let code = req.body.code;
+            let credentials = await get_ghl_token(code);
+
+            value = await DatastoreClient.FindByValue('Users', "GHLID", credentials.locationId);
+            console.log(value);
+            if (value.length > 0) {
+                console.log("Updating GHL tokens");
+                console.log(Number(value[0].key.id));
+
+                value[0].entity.ghl_access_token = credentials.access_token;
+                value[0].entity.ghl_refresh_token = credentials.refresh_token;
+                value[0].entity.code = code;
+                value[0].entity.GHLID = credentials.locationId
+                await DatastoreClient.save('Users', Number(value[0].key.id), value[0].entity);
+            }
+            else {
+                // create it
+                const obj = {
+                    GHLID: credentials.locationId,
+                    code: req.body.code,
+                    ghl_access_token: credentials.access_token,
+                    ghl_refresh_token: credentials.refresh_token,
+                }
+                console.log("New GHL Details", obj);
+                await DatastoreClient.defaultSave('Users', obj);
+            }
+            return res.status(200).json({
+                message: "success",
+                ghl_code: code,
+                ghl_token: credentials
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(error);
+        }
+    }
+}
+
 exports.fail = async(req, res) => {
     res.render('failure');
 }
