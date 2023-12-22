@@ -155,9 +155,10 @@ exports.get_person = async(req, res) => {
         try {
             let person_id = Number(req.body.PERONSID);
             let GHLID = String(req.body.GHLID);
-            let value = await DatastoreClient.ArrLookUp('Users', "GHLID", GHLID);
+            let value = await DatastoreClient.FindByValue('Users', "GHLID", GHLID);
+            console.log(value[0]);
             
-            const base64String = stringToBase64((value[0].FUB_API_KEY).trim()+":");
+            const base64String = stringToBase64((value[0].entity.FUB_API_KEY).trim()+":");
 
             let auth_api_key = base64String;
             let options = {
@@ -171,6 +172,10 @@ exports.get_person = async(req, res) => {
             };
             const person_response = await axios(options);
             
+            let payload = { ...req.body, ...person_response.data }
+            if(value[0].entity && value[0].entity.ghl_access_token) payload.ghl_access_token = value[0].entity.ghl_access_token
+            if(value[0].entity && value[0].entity.ghl_refresh_token) payload.ghl_refresh_token = value[0].entity.ghl_refresh_token
+            
             let config = {
                 method: 'POST',
                 url: `https://hook.us1.make.com/uxw85hfc9z2ua7ndnmyxexqwblob5qfb`,
@@ -178,13 +183,12 @@ exports.get_person = async(req, res) => {
                     accept: 'application/json',
                     'content-type': 'application/json'
                 },
-                data: { ...req.body, ...person_response.data }
+                data: payload
             };
             const hook_response = await axios(config);
-            console.log(person_response.data);
-            console.log(hook_response.data);
+            console.log("Response body", payload);
 
-            return res.status(200).json({ ...req.body, ...person_response.data });
+            return res.status(200).json(payload);
         } catch (error) {
             return res.status(500).json(error);
         }
@@ -242,6 +246,12 @@ function filterArrayByElements(array1, array2) {
     return array1.filter(element => array2.includes(element));
 }
 
+const get_time_difference = async (timestamp1, timestamp2) => {
+    const durationInMilliseconds = timestamp2 - timestamp1;
+    const durationInHours = durationInMilliseconds / (1000 * 60 * 60);
+    return durationInHours;
+}
+
 exports.fub_tags = async(req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     if (req.method === 'OPTIONS') {
@@ -252,35 +262,78 @@ exports.fub_tags = async(req, res) => {
     } else {
         try {
             var knownTags = process.env.CONDITIONS.split(",");
-            let added_tags = req.body.data
+            console.log("Requested body", req.body);
+            console.log("Queries", req.query);
+            let added_tags = req.body.data;
             let person_ids = req.body.resourceIds;
+            console.log("Known Tags", knownTags);
+
+            let available_tags = filterArrayByElements(knownTags, added_tags.tags);
+
+            console.log(available_tags);
 
             console.log("Payload", {
                 person_ids,
-                added_tags
+                added_tags: available_tags,
+                ...req.query
             });
-            console.log("Known Tags", knownTags);
-
-            let available_tags = filterArrayByElements(knownTags, added_tags.tags)
 
             if(available_tags.length > 0){
-                let config = {
-                    method: 'POST',
-                    url: `https://hkdk.events/m4TCy4Ea8mIO?process=tags`,
-                    headers: {
-                        accept: 'application/json',
-                        'content-type': 'application/json'
-                    },
-                    data: {
-                        person_ids,
-                        tags: available_tags
+                let GHLID = String(req.query.GHLID);
+                
+                let value = await DatastoreClient.FindByValue('Users', "GHLID", GHLID);
+                // console.log(value[0]);
+
+                if(value[0].entity.ghl_token_timestamp){
+                    console.log("Inside token refresh");
+                    let last_timestamp = Number(value[0].entity.ghl_token_timestamp)
+                    let current_timestamp = Date.now();
+
+                    let expire_duration = await get_time_difference(last_timestamp, current_timestamp);
+
+                    if(expire_duration >= 23){
+                        console.log("GHL Tokens expired.");
+                        if(value[0].entity.code && value[0].entity.ghl_access_token && value[0].entity.ghl_refresh_token){
+                            console.log("Refreshing GHL Tokens.");
+                            credentials = await get_ghl_token("", "refresh_token", value[0].entity.ghl_refresh_token);
+        
+                            value[0].entity.ghl_access_token = credentials.access_token;
+                            value[0].entity.ghl_refresh_token = credentials.refresh_token;
+                            value[0].entity.ghl_token_timestamp = current_timestamp;
+        
+                            await DatastoreClient.save('Users', Number(value[0].key.id), value[0].entity);
+                        }
                     }
+                }
+
+                for (const person_id of person_ids) {
+                    console.log("POST request payload", {
+                        person_id,
+                        added_tags: available_tags,
+                        ...req.query
+                    });
+            
+                    let config = {
+                        method: 'POST',
+                        url: `https://hkdk.events/m4TCy4Ea8mIO?process=tags`,
+                        headers: {
+                            accept: 'application/json',
+                            'content-type': 'application/json',
+                        },
+                        data: {
+                            PERONSID: person_id,
+                            added_tags: available_tags,
+                            ...req.query
+                        }
+                    };
+                    const hook_response = await axios(config);
+                    console.log(`Request for person_id ${person_id} successful. Response:`, hook_response.data);
                 };
-                const hook_response = await axios(config);
             }
+
             return res.status(200).json({
                 person_ids,
-                tags: available_tags
+                added_tags: available_tags
             });
         } catch (error) {
             return res.status(500).json(error);
@@ -336,6 +389,7 @@ exports.ghl_auth = async(req, res) => {
                 value[0].entity.ghl_refresh_token = credentials.refresh_token;
                 value[0].entity.code = code;
                 value[0].entity.GHLID = credentials.locationId
+                value[0].entity.ghl_token_timestamp = Number(Date.now());
                 await DatastoreClient.save('Users', Number(value[0].key.id), value[0].entity);
             }
             else {
@@ -345,6 +399,7 @@ exports.ghl_auth = async(req, res) => {
                     code: req.body.code,
                     ghl_access_token: credentials.access_token,
                     ghl_refresh_token: credentials.refresh_token,
+                    ghl_token_timestamp: Number(Date.now())
                 }
                 console.log("New GHL Details", obj);
                 await DatastoreClient.defaultSave('Users', obj);
